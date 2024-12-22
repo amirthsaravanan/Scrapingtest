@@ -2,7 +2,7 @@ Here's a GitHub Actions workflow YAML file to run your amz_mail.py script daily 
 
 Workflow YAML (daily-selenium.yml)
 
-name: Run Python Script Daily
+name: run amz_mail.py
 
 # Schedule the workflow to run at 10 PM UTC daily
 on:
