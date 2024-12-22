@@ -1,8 +1,4 @@
-Here's a GitHub Actions workflow YAML file to run your amz_mail.py script daily at 10 PM UTC. It also installs Selenium and the necessary dependencies from your install_chr_sel_ium.sh file.
-
-Workflow YAML (daily-selenium.yml)
-
-name: run amz_mail.py
+name: Run amz_mail.py
 
 # Schedule the workflow to run at 10 PM UTC daily
 on:
@@ -13,29 +9,28 @@ jobs:
   run-script:
     runs-on: ubuntu-latest  # Use the latest Ubuntu runner
 
-     jobs:
-    build:
-    runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout the repository content
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: checkout repo content
-        uses: actions/checkout@v3 # checkout the repository content to github runner
-
-      - name: setup python
+      # Step 2: Set up Python
+      - name: Set Up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9' # install the python version needed
-          
-      - name: install python packages
+          python-version: '3.9'  # Specify Python version
+
+      # Step 3: Install Python packages
+      - name: Install Python Packages
         run: |
           python -m pip install --upgrade pip
 
-    # Step 2: Make the script executable and install dependencies
-    - name: Install Selenium and ChromeDriver
-      run: |
-        chmod +x install_chr_sel_ium.sh
-        ./install_chr_sel_ium.sh
+      # Step 4: Install Selenium and ChromeDriver
+      - name: Install Selenium and ChromeDriver
+        run: |
+          chmod +x install_chr_sel_ium.sh
+          ./install_chr_sel_ium.sh
 
-    # Step 3: Run your Python script
-    - name: Run Python Script
-      run: python amz_mail.py
+      # Step 5: Run the Python script
+      - name: Run amz_mail.py
+        run: python amz_mail.py
