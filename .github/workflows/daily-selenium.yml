@@ -18,7 +18,7 @@ jobs:
       - name: Set Up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'  # Specify Python version
+          python-version: '3.9'
 
       # Step 3: Install Python dependencies
       - name: Install Required Libraries
@@ -36,6 +36,10 @@ jobs:
           sudo mv chromedriver /usr/local/bin/
           rm chromedriver.zip
 
-      # Step 5: Run the Python script
+      # Step 5: Run the Python script with environment variables
       - name: Run amz_mail.py
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
         run: python amz_mail.py
