@@ -37,12 +37,16 @@ try:
     # Wait at least 1 minute for the page to fully load
     time.sleep(60)
 
+    # Log the page source for debugging
+    print("Page source after 60 seconds:")
+    print(driver.page_source)
+
     # Scrape product details
-    product_name = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "productTitle"))
+    product_name = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "span#productTitle"))
     ).text.strip()
 
-    price = WebDriverWait(driver, 10).until(
+    price = WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".a-price-whole"))
     ).text.strip()
 
