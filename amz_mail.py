@@ -35,11 +35,11 @@ try:
     driver.get(url)
 
     # Wait for elements to load and scrape data
-    product_name = WebDriverWait(driver, 10).until(
+    product_name = WebDriverWait(driver, 100).until(
         EC.presence_of_element_located((By.XPATH, "//span[@class='a-size-large product-title-word-break']"))
     ).text
 
-    price = WebDriverWait(driver, 10).until(
+    price = WebDriverWait(driver, 100).until(
         EC.presence_of_element_located((By.XPATH, "//span[@class='a-price-whole']"))
     ).text
 
