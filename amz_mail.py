@@ -1,16 +1,12 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import time
 from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
-
+import os  # For accessing environment variables
 
 def web_driver():
     options = webdriver.ChromeOptions()
@@ -35,12 +31,11 @@ try:
     time.sleep(5)
 
     # Locate the element using XPath
-      # Scrape the Product name
+    # Scrape the Product name
     product_name = driver.find_element(By.XPATH, "//span[@class='a-size-large product-title-word-break']").text
 
     # Scrape the Price
     price = driver.find_element(By.XPATH, "//span[@class='a-price-whole']").text
-
 
     print(f"Product: {product_name}")
     print(f"Price: {price}")
@@ -52,10 +47,13 @@ finally:
     # Close the browser
     driver.quit()
 
-# Email configuration
-sender_email = "saroganesan@gmail.com"
-sender_password = "zwtb uryq upld cnsw"
-receiver_email = "amirthsaravanan@gmail.com"
+# Email configuration using environment variables
+sender_email = os.getenv("SENDER_EMAIL")
+sender_password = os.getenv("SENDER_PASSWORD")
+receiver_email = os.getenv("RECEIVER_EMAIL")
+
+if not sender_email or not sender_password or not receiver_email:
+    raise ValueError("Email credentials not found in environment variables.")
 
 subject = "Amazon Product Details"
 body = f"Product: {product_name}\nPrice: {price}\nDate and Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\nLink: {url}"
