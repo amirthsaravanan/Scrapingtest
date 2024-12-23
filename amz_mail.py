@@ -25,11 +25,16 @@ def web_driver():
 # Initialize WebDriver
 driver = web_driver()
 
+# Default values for product details
+product_name = "N/A"
+price = "N/A"
+url = "https://amzn.in/d/2atlNqL"
+
 try:
-    url = "https://amzn.in/d/2atlNqL"
+    # Navigate to the URL
     driver.get(url)
 
-    # Explicit waits for dynamic content
+    # Wait for elements to load and scrape data
     product_name = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//span[@class='a-size-large product-title-word-break']"))
     ).text
@@ -42,12 +47,14 @@ try:
     print(f"Price: {price}")
 
 except Exception as e:
-    print(f"An error occurred: {e}")
+    # Log the error and handle missing data gracefully
+    print(f"An error occurred while scraping: {e}")
 
 finally:
+    # Close the browser
     driver.quit()
 
-# Email configuration
+# Email configuration using environment variables
 sender_email = os.getenv("SENDER_EMAIL")
 sender_password = os.getenv("SENDER_PASSWORD")
 receiver_email = os.getenv("RECEIVER_EMAIL")
@@ -55,15 +62,18 @@ receiver_email = os.getenv("RECEIVER_EMAIL")
 if not sender_email or not sender_password or not receiver_email:
     raise ValueError("Email credentials not found in environment variables.")
 
+# Prepare the email content
 subject = "Amazon Product Details"
 body = f"Product: {product_name}\nPrice: {price}\nDate and Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\nLink: {url}"
 
+# Create the email
 message = MIMEMultipart()
 message["From"] = sender_email
 message["To"] = receiver_email
 message["Subject"] = subject
 message.attach(MIMEText(body, "plain"))
 
+# Send the email
 try:
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
         server.starttls()
