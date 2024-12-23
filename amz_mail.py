@@ -34,14 +34,17 @@ try:
     # Navigate to the URL
     driver.get(url)
 
-    # Wait for elements to load and scrape data
-    product_name = WebDriverWait(driver, 100).until(
-        EC.presence_of_element_located((By.XPATH, "//span[@class='a-size-large product-title-word-break']"))
-    ).text
+    # Wait at least 1 minute for the page to fully load
+    time.sleep(60)
 
-    price = WebDriverWait(driver, 100).until(
-        EC.presence_of_element_located((By.XPATH, "//span[@class='a-price-whole']"))
-    ).text
+    # Scrape product details
+    product_name = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "productTitle"))
+    ).text.strip()
+
+    price = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, ".a-price-whole"))
+    ).text.strip()
 
     print(f"Product: {product_name}")
     print(f"Price: {price}")
