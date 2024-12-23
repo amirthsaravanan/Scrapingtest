@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 from datetime import datetime
 import smtplib
@@ -9,14 +11,16 @@ from email.mime.multipart import MIMEMultipart
 import os  # For accessing environment variables
 
 def web_driver():
-    options = webdriver.ChromeOptions()
+    options = Options()
     options.add_argument("--verbose")
     options.add_argument('--no-sandbox')
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     options.add_argument("--window-size=1920,1200")
     options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(options=options)
+
+    # Use webdriver-manager to install and manage ChromeDriver
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     return driver
 
 # Create driver instance
@@ -31,10 +35,7 @@ try:
     time.sleep(5)
 
     # Locate the element using XPath
-    # Scrape the Product name
     product_name = driver.find_element(By.XPATH, "//span[@class='a-size-large product-title-word-break']").text
-
-    # Scrape the Price
     price = driver.find_element(By.XPATH, "//span[@class='a-price-whole']").text
 
     print(f"Product: {product_name}")
