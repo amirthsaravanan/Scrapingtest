@@ -20,21 +20,16 @@ jobs:
         with:
           python-version: '3.9'
 
-      # Step 3: Install Python dependencies
-      - name: Install Required Libraries
+      # Step 3: Install Required Libraries (including webdriver-manager)
+      - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install selenium
+          pip install selenium webdriver-manager
 
-      # Step 4: Install ChromeDriver
-      - name: Install ChromeDriver
+      # Step 4: Modify amz_mail.py to use webdriver-manager
+      - name: Update ChromeDriver with webdriver-manager
         run: |
-          sudo apt-get update
-          sudo apt-get install -y wget unzip
-          wget -q "https://chromedriver.storage.googleapis.com/$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip" -O chromedriver.zip
-          unzip chromedriver.zip
-          sudo mv chromedriver /usr/local/bin/
-          rm chromedriver.zip
+          sed -i "s|webdriver.Chrome(options=options)|webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)|" amz_mail.py
 
       # Step 5: Run the Python script with environment variables
       - name: Run amz_mail.py
