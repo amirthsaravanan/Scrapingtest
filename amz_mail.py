@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+import random
 import time
 from datetime import datetime
 import smtplib
@@ -14,12 +15,14 @@ import os
 
 def web_driver():
     options = Options()
-    options.add_argument("--verbose")
-    options.add_argument('--no-sandbox')
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-gpu")
     options.add_argument("--window-size=1920,1200")
-    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument("--disable-dev-shm-usage")
+    # Simulate a real browser user-agent
+    options.add_argument(
+        f"user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"
+    )
     return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 # Initialize WebDriver
@@ -31,22 +34,22 @@ price = "N/A"
 url = "https://amzn.in/d/2atlNqL"
 
 try:
-    # Navigate to the URL
+    # Navigate to the URL with a random delay
+    print("Navigating to the URL...")
     driver.get(url)
-
-    # Wait at least 1 minute for the page to fully load
-    time.sleep(60)
+    time.sleep(random.uniform(10, 20))  # Random delay for human-like behavior
 
     # Log the page source for debugging
-    print("Page source after 60 seconds:")
+    print("Page source:")
     print(driver.page_source)
 
     # Scrape product details
-    product_name = WebDriverWait(driver, 20).until(
+    print("Scraping product details...")
+    product_name = WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "span#productTitle"))
     ).text.strip()
 
-    price = WebDriverWait(driver, 20).until(
+    price = WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".a-price-whole"))
     ).text.strip()
 
