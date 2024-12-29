@@ -33,7 +33,7 @@ driver = web_driver()
 # Default values for product details
 product_name = "N/A"
 price = "N/A"
-url = "https://amzn.in/d/2atlNqL"
+url = "https://pricehistoryapp.com/product/buyerzone-digital-smart-alarm-clock-for-students-heavy-sleepers-with-sensor-date-clock"
 
 try:
     # Navigate to the URL with a random delay
@@ -44,7 +44,7 @@ try:
     # Log the page source for debugging
     print("Page source:")
     print(driver.page_source)
-
+'''
     # Scrape product details
     print("Scraping product details...")
     product_name = WebDriverWait(driver, 30).until(
@@ -57,7 +57,7 @@ try:
 
     print(f"Product: {product_name}")
     print(f"Price: {price}")
-
+'''
 except Exception as e:
     # Log the error and handle missing data gracefully
     print(f"An error occurred while scraping: {e}")
@@ -65,7 +65,7 @@ except Exception as e:
 finally:
     # Close the browser
     driver.quit()
-
+'''
 # Email configuration using environment variables
 sender_email = os.getenv("SENDER_EMAIL")
 sender_password = os.getenv("SENDER_PASSWORD")
