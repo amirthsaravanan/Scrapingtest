@@ -33,7 +33,7 @@ driver = web_driver()
 # Default values for product details
 product_name = "N/A"
 price = "N/A"
-url = "https://pricehistoryapp.com/product/buyerzone-digital-smart-alarm-clock-for-students-heavy-sleepers-with-sensor-date-clock"
+url = "https://pricehistoryapp.com/product/granotone-double-boiled-linseed-oil-an-effective-waterproof-furniture-polish-oil-used-for-wood-finishing-sports-goods-like-cricket-bat-filling-cra-5348"
 
 try:
     # Navigate to the URL with a random delay
@@ -44,8 +44,20 @@ try:
     # Log the page source for debugging
     print("Page source:")
     print(driver.page_source)
-    
-    
+
+    # Scrape product details
+    print("Scraping product details...")
+    product_name = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.XPATH, "//h1[@class='font-semibold text-lg']"))
+    ).text.strip()
+
+    price = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.XPATH, "//div[@class='content-width mx-auto px-3']"))
+    ).text.strip()
+
+    print(f"Product: {product_name}")
+    print(f"Price: {price}")
+
 except Exception as e:
     # Log the error and handle missing data gracefully
     print(f"An error occurred while scraping: {e}")
@@ -53,3 +65,32 @@ except Exception as e:
 finally:
     # Close the browser
     driver.quit()
+
+# Email configuration using environment variables
+sender_email = os.getenv("SENDER_EMAIL")
+sender_password = os.getenv("SENDER_PASSWORD")
+receiver_email = os.getenv("RECEIVER_EMAIL")
+
+if not sender_email or not sender_password or not receiver_email:
+    raise ValueError("Email credentials not found in environment variables.")
+
+# Prepare the email content
+subject = "Amazon Product Details"
+body = f"Product: {product_name}\nPrice: {price}\nDate and Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\nLink: {url}"
+
+# Create the email
+message = MIMEMultipart()
+message["From"] = sender_email
+message["To"] = receiver_email
+message["Subject"] = subject
+message.attach(MIMEText(body, "plain"))
+
+# Send the email
+try:
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
+    print("Email sent successfully!")
+except Exception as e:
+    print(f"Error sending email: {e}")
